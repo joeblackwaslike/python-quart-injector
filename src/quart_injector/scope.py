@@ -1,14 +1,15 @@
 """
 Request :class:`~injector.Scope`.
 """
+from __future__ import annotations
 
-import typing
+from typing import Optional, Type, TypeVar
 
 import injector
 import quart
 import werkzeug.local
 
-T = typing.TypeVar("T")
+T = TypeVar("T")
 
 
 class RequestScope(injector.Scope):
@@ -33,7 +34,7 @@ class RequestScope(injector.Scope):
         """
         self._stack.pop()
 
-    def get(self, key: type[T], provider: injector.Provider[T]) -> injector.Provider[T]:
+    def get(self, key: Type[T], provider: injector.Provider[T]) -> injector.Provider[T]:
         try:
             return self._stack.top[key]
         except KeyError:
@@ -48,7 +49,7 @@ request = injector.ScopeDecorator(RequestScope)
 
 
 def bind_scope(
-    scope_cls: type[injector.Scope],
+    scope_cls: Type[injector.Scope],
     app: quart.Quart,
     container: injector.Injector,
 ) -> None:
@@ -66,7 +67,7 @@ def bind_scope(
     async def before_func() -> None:
         container.get(scope_cls).push()
 
-    async def teardown_func(_: BaseException | None) -> None:
+    async def teardown_func(_: Optional[BaseException]) -> None:
         container.get(scope_cls).pop()
 
     app.before_request_funcs[None].insert(0, before_func)

@@ -1,6 +1,8 @@
 """
 Tests for :class:`~quart_injector.QuartModule`.
 """
+from __future__ import annotations
+
 import logging
 
 import injector

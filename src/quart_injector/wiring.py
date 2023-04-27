@@ -1,12 +1,12 @@
 """
 Wire up :class:`~quart.Quart` application to :class:`~injector.Injector` instance.
 """
-
+from __future__ import annotations
 
 import collections.abc
 import functools
 import inspect
-import typing
+from typing import Any, cast, Union, Optional, Iterable
 
 import injector
 import quart
@@ -15,13 +15,15 @@ import quart.views
 import quart_injector.module
 import quart_injector.scope
 
+ModulesType = Union[injector._InstallableModuleType, Iterable[injector._InstallableModuleType], None]
+
 
 def _wrap_view_class(
     view_func: collections.abc.Callable,
     app: quart.Quart,
     container: injector.Injector,
 ) -> collections.abc.Callable:
-    cls: type[quart.views.View] = typing.cast(typing.Any, view_func).view_class
+    cls: type[quart.views.View] = cast(Any, view_func).view_class
 
     while getattr(view_func, "__wrapped__", None):  # pylint: disable=while-used
         view_func = view_func.__wrapped__
@@ -35,7 +37,7 @@ def _wrap_view_class(
 
     class_kwargs = closure.nonlocals["class_kwargs"]
 
-    async def view(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
+    async def view(*args: Any, **kwargs: Any) -> Any:
         self = container.create_object(cls, additional_kwargs=class_kwargs)
 
         dispatch_request = app.ensure_async(self.dispatch_request)
@@ -81,14 +83,14 @@ def wrap(
     async_func = app.ensure_async(view_func)
 
     @functools.wraps(view_func)
-    async def view(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
+    async def view(*args: Any, **kwargs: Any) -> Any:
         return await container.call_with_injection(async_func, None, args, kwargs)
 
     return view
 
 
 def _wire_collection(
-    value: typing.Any,
+    value: Any,
     app: quart.Quart,
     container: injector.Injector,
 ) -> None:
@@ -105,11 +107,9 @@ def _wire_collection(
 
 def wire(
     app: quart.Quart,
-    modules: injector._InstallableModuleType
-    | collections.abc.Iterable[injector._InstallableModuleType]
-    | None = None,
+    modules: ModulesType = None,
     auto_bind: bool = True,
-    parent: injector.Injector | None = None,
+    parent: Optional[injector.Injector] = None,
 ) -> None:
     """
     Wire.

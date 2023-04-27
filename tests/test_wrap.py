@@ -1,10 +1,12 @@
 """
 Tests for :class:`~quart_injector.wrap`.
 """
+from __future__ import annotations
+
+from typing import List, Any
 import collections.abc
 import functools
 import re
-import typing
 
 import injector
 import pytest
@@ -27,7 +29,7 @@ async def test_it_should_wrap_functions_with_injector() -> None:
     """
     app = quart.Quart(__name__)
 
-    args: list[typing.Any] = [None, None]
+    args: List[Any] = [None, None]
 
     def configure(binder: injector.Binder) -> None:
         binder.bind(EmptyClass)
@@ -55,7 +57,7 @@ async def test_it_should_wrap_functions_with_injector_using_annotation() -> None
     """
     app = quart.Quart(__name__)
 
-    args: list[typing.Any] = [None, None]
+    args: List[Any] = [None, None]
 
     def configure(binder: injector.Binder) -> None:
         binder.bind(EmptyClass)
@@ -82,7 +84,7 @@ async def test_it_should_wrap_async_functions_with_injector() -> None:
     """
     app = quart.Quart(__name__)
 
-    args: list[typing.Any] = [None, None]
+    args: List[Any] = [None, None]
 
     def configure(binder: injector.Binder) -> None:
         binder.bind(EmptyClass)
@@ -110,7 +112,7 @@ async def test_it_should_wrap_class_based_views_with_injector() -> None:
     """
     app = quart.Quart(__name__)
 
-    _args: list[typing.Any] = [None, None, None]
+    _args: List[Any] = [None, None, None]
 
     def configure(binder: injector.Binder) -> None:
         binder.bind(EmptyClass)
@@ -127,8 +129,8 @@ async def test_it_should_wrap_class_based_views_with_injector() -> None:
 
         async def dispatch_request(
             self,
-            *args: typing.Any,
-            **kwargs: typing.Any,
+            *args: Any,
+            **kwargs: Any,
         ) -> str:
             _args[0] = self.arg
             _args[1] = self.empty
@@ -168,8 +170,8 @@ async def test_it_should_error_when_wrapping_class_based_views_with_args() -> No
 
         async def dispatch_request(
             self,
-            *args: typing.Any,
-            **kwargs: typing.Any,
+            *args: Any,
+            **kwargs: Any,
         ) -> str:
             return "baz"
 
@@ -191,7 +193,7 @@ async def test_it_should_wrap_class_based_views_using_decorators() -> None:
     """
     app = quart.Quart(__name__)
 
-    _args: list[typing.Any] = [None, None, None]
+    _args: List[Any] = [None, None, None]
 
     def configure(binder: injector.Binder) -> None:
         binder.bind(EmptyClass)
@@ -219,8 +221,8 @@ async def test_it_should_wrap_class_based_views_using_decorators() -> None:
 
         async def dispatch_request(
             self,
-            *args: typing.Any,
-            **kwargs: typing.Any,
+            *args: Any,
+            **kwargs: Any,
         ) -> str:
             _args[0] = self.arg
             _args[1] = self.empty

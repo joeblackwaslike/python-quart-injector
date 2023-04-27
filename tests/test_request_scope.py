@@ -1,6 +1,8 @@
 """
 Tests for :class:`~quart_injector.RequestScope`.
 """
+from __future__ import annotations
+
 import injector
 
 import quart_injector

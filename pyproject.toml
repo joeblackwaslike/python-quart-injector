@@ -1,40 +1,22 @@
-[tool.poetry]
+[project]
 name = "quart-injector"
-version = "0.0.1-b1"
+version = "0.1.0"
 description = ""
-authors = ["Daniel Knell <contact@danielknell.co.uk>"]
 readme = "README.md"
-packages = [{include = "quart_injector", from = "src"}]
+requires-python = ">=3.7"
+dependencies = [
+    "quart~=0.18.4",
+    "injector>=0.19.0,<1.0.0"
+]
 
-[tool.poetry.dependencies]
-python = "^3.10"
-injector = ">= 0.19.0, < 1.0.0"
-quart =  ">= 0.17.0, < 1.0.0"
-
-[tool.poetry.group.dev.dependencies]
-shed = "^0.9.5"
-pylint = "^2.13.8"
-mypy = "^0.950"
-pytest = "^7.1.2"
-pytest-asyncio = "^0.18.3"
-pytest-cov = "^3.0.0"
-docformatter = "^1.4"
-pytest-pylint = "^0.18.0"
-pytest-mypy = "^0.9.1"
-pydocstyle = "^6.1.1"
-pytest-pydocstyle = "^2.3.0"
-pyenchant = "^3.2.2"
-
-[tool.poetry.group.docs.dependencies]
-myst-parser = "^0.17.2"
-sphinx-artisan-theme = "^0.0.1-beta.2"
-autodocsumm = "^0.2.8"
-sphinx-autobuild = "^2021.3.14"
-sphinxcontrib-spelling = "^7.3.3"
+[project.optional-dependencies]
+dev = ["shed", "pylint", "mypy", "pyenchant"]
+test = ["pytest", "pytest-asyncio", "pytest-cov", "pytest-pylint", "pytest-mypy", "pytest-pydocstyle"]
+doc = ["docformatter", "pydocstyle", "myst-parser", "sphinx-artisan-theme", "autodocsumm", "sphinx-autobuild", "sphinxcontrib-spelling"]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
 
 [tool.isort]
 profile = "black"
@@ -67,7 +49,7 @@ disable = [
 ]
 
 [tool.pylint.format]
-max-line-length = 88
+max-line-length = 100
 
 [tool.pylint.spelling]
 spelling-dict = "en_GB"
@@ -78,6 +60,7 @@ ignore-signatures = true
 ignore-imports = true
 
 [tool.pytest.ini_options]
+pythonpath = "src"
 asyncio_mode = "strict"
 testpaths = "tests"
 filterwarnings = [

@@ -1,6 +1,8 @@
 """
 Quart :class:`~injector.Module`.
 """
+from __future__ import annotations
+
 import logging
 
 import injector

@@ -1,7 +1,9 @@
 """
 Tests for :class:`~quart_injector.wire`.
 """
-import typing
+from __future__ import annotations
+
+from typing import List, Dict, Any, Optional
 
 import injector
 import pytest
@@ -207,7 +209,7 @@ async def test_it_should_inject_into_app_after_request_function() -> None:
     """
     app = factory()
 
-    args: list[typing.Any] = [None]
+    args: List[Any] = [None]
 
     @app.after_request  # type: ignore
     @injector.inject
@@ -232,14 +234,14 @@ async def test_it_should_inject_into_app_after_websocket_function() -> None:
     """
     app = factory()
 
-    args: list[typing.Any] = [None]
+    args: List[Any] = [None]
 
     @app.after_websocket  # type: ignore
     @injector.inject
     async def _(
-        response: quart.Response | None,
+        response: Optional[quart.Response],
         empty: EmptyClass,
-    ) -> quart.Response | None:
+    ) -> Optional[quart.Response]:
         args[0] = empty
 
         return response
@@ -262,7 +264,7 @@ async def test_it_should_inject_into_app_before_request_function() -> None:
     """
     app = factory()
 
-    args: list[typing.Any] = [None]
+    args: List[Any] = [None]
 
     @app.before_request  # type: ignore
     @injector.inject
@@ -285,7 +287,7 @@ async def test_it_should_inject_into_app_before_websocket_function() -> None:
     """
     app = factory()
 
-    args: list[typing.Any] = [None]
+    args: List[Any] = [None]
 
     @app.before_websocket  # type: ignore
     @injector.inject
@@ -312,7 +314,7 @@ async def test_it_should_inject_into_app_errorhandler_function() -> None:
     """
     app = factory()
 
-    args: list[typing.Any] = [None]
+    args: List[Any] = [None]
 
     @app.errorhandler(CustomError)  # type: ignore
     @injector.inject
@@ -337,11 +339,11 @@ async def test_it_should_inject_into_app_teardown_request_function() -> None:
     """
     app = factory()
 
-    args: list[typing.Any] = [None]
+    args: List[Any] = [None]
 
     @app.teardown_request  # type: ignore
     @injector.inject
-    async def _(_: BaseException | None, empty: EmptyClass) -> None:
+    async def _(_: Optional[BaseException], empty: EmptyClass) -> None:
         args[0] = empty
 
     quart_injector.wire(app, configure)
@@ -360,11 +362,11 @@ async def test_it_should_inject_into_app_teardown_websocket_function() -> None:
     """
     app = factory()
 
-    args: list[typing.Any] = [None]
+    args: List[Any] = [None]
 
     @app.teardown_websocket  # type: ignore
     @injector.inject
-    async def _(_: BaseException | None, empty: EmptyClass) -> None:
+    async def _(_: Optional[BaseException], empty: EmptyClass) -> None:
         args[0] = empty
 
     quart_injector.wire(app, configure)
@@ -385,11 +387,11 @@ async def test_it_should_inject_into_app_context_processor_function() -> None:
     """
     app = factory()
 
-    args: list[typing.Any] = [None]
+    args: List[Any] = [None]
 
     @app.context_processor  # type: ignore
     @injector.inject
-    async def _(empty: EmptyClass) -> dict[str, typing.Any]:
+    async def _(empty: EmptyClass) -> Dict[str, Any]:
         args[0] = empty
 
         return {}
@@ -410,7 +412,7 @@ async def test_it_should_inject_into_app_views() -> None:
     """
     app = factory()
 
-    args: list[typing.Any] = [None]
+    args: List[Any] = [None]
 
     @app.route("/test")
     @injector.inject
@@ -435,7 +437,7 @@ async def test_it_should_inject_into_blueprint_after_request_function() -> None:
     """
     app, blueprint = blueprint_factory()
 
-    args: list[typing.Any] = [None]
+    args: List[Any] = [None]
 
     @blueprint.after_request  # type: ignore
     @injector.inject
@@ -462,14 +464,14 @@ async def test_it_should_inject_into_blueprint_after_websocket_function() -> Non
     """
     app, blueprint = blueprint_factory()
 
-    args: list[typing.Any] = [None]
+    args: List[Any] = [None]
 
     @blueprint.after_websocket  # type: ignore
     @injector.inject
     async def _(
-        response: quart.Response | None,
+        response: Optional[quart.Response],
         empty: EmptyClass,
-    ) -> quart.Response | None:
+    ) -> Optional[quart.Response]:
         args[0] = empty
 
         return response
@@ -494,7 +496,7 @@ async def test_it_should_inject_into_blueprint_before_request_function() -> None
     """
     app, blueprint = blueprint_factory()
 
-    args: list[typing.Any] = [None]
+    args: List[Any] = [None]
 
     @blueprint.before_request  # type: ignore
     @injector.inject
@@ -519,7 +521,7 @@ async def test_it_should_inject_into_blueprint_before_websocket_function() -> No
     """
     app, blueprint = blueprint_factory()
 
-    args: list[typing.Any] = [None]
+    args: List[Any] = [None]
 
     @blueprint.before_websocket  # type: ignore
     @injector.inject
@@ -548,7 +550,7 @@ async def test_it_should_inject_into_blueprint_errorhandler_function() -> None:
     """
     app, blueprint = blueprint_factory()
 
-    args: list[typing.Any] = [None]
+    args: List[Any] = [None]
 
     @blueprint.errorhandler(CustomError)  # type: ignore
     @injector.inject
@@ -575,11 +577,11 @@ async def test_it_should_inject_into_blueprint_teardown_request_function() -> No
     """
     app, blueprint = blueprint_factory()
 
-    args: list[typing.Any] = [None]
+    args: List[Any] = [None]
 
     @blueprint.teardown_request  # type: ignore
     @injector.inject
-    async def _(_: BaseException | None, empty: EmptyClass) -> None:
+    async def _(_: Optional[BaseException], empty: EmptyClass) -> None:
         args[0] = empty
 
     app.register_blueprint(blueprint)
@@ -600,11 +602,11 @@ async def test_it_should_inject_into_blueprint_teardown_websocket_function() -> 
     """
     app, blueprint = blueprint_factory()
 
-    args: list[typing.Any] = [None]
+    args: List[Any] = [None]
 
     @blueprint.teardown_websocket  # type: ignore
     @injector.inject
-    async def _(_: BaseException | None, empty: EmptyClass) -> None:
+    async def _(_: Optional[BaseException], empty: EmptyClass) -> None:
         args[0] = empty
 
     app.register_blueprint(blueprint)
@@ -627,11 +629,11 @@ async def test_it_should_inject_into_blueprint_context_processor_function() -> N
     """
     app, blueprint = blueprint_factory()
 
-    args: list[typing.Any] = [None]
+    args: List[Any] = [None]
 
     @blueprint.context_processor  # type: ignore
     @injector.inject
-    async def _(empty: EmptyClass) -> dict[str, typing.Any]:
+    async def _(empty: EmptyClass) -> Dict[str, Any]:
         args[0] = empty
 
         return {}
@@ -654,7 +656,7 @@ async def test_it_should_inject_into_blueprint_views() -> None:
     """
     app, blueprint = blueprint_factory()
 
-    args: list[typing.Any] = [None]
+    args: List[Any] = [None]
 
     @blueprint.route("/test")
     @injector.inject
@@ -682,7 +684,7 @@ async def test_it_should_inject_consistent_values_inside_request() -> None:
 
     app = factory()
 
-    args: list[typing.Any] = [None, None]
+    args: List[Any] = [None, None]
 
     @app.before_request  # type: ignore
     @injector.inject
@@ -713,7 +715,7 @@ async def test_it_should_inject_differet_values_in_different_requests() -> None:
     """
     app = factory()
 
-    args: list[typing.Any] = []
+    args: List[Any] = []
 
     @app.route("/test")
     @injector.inject

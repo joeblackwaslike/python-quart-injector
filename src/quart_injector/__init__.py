@@ -1,6 +1,7 @@
 """
 :class:`~injector.Injector` support for :class:`~quart.Quart` applications.
 """
+from __future__ import annotations
 
 from quart_injector.module import QuartModule
 from quart_injector.scope import RequestScope, request
